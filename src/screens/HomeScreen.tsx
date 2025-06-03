@@ -12,6 +12,7 @@ import CategoryList from '@/components/category/CategoryList';
 import { Banner, bannerData } from '@/components/banner';
 import { HeaderGrid, headerGridData } from '@/components/header';
 import { mockProducts } from '@/utils/mockData';
+import AdsBanner from '@/components/ads/AdsBanner';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
 
@@ -31,9 +32,17 @@ function HomeScreen() {
   return (
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
+
+        {/* Ads Banner */}
+        <AdsBanner/>
+
+        {/* Header 3x2 Grid */}
         <HeaderGrid boxes={headerGridData} onBoxPress={handleCategoryPress} />
+
+        {/* Banner Slider*/}
         <Banner banners={bannerData} />
 
+        {/* Categories */}
         <SectionContainer>
           <SectionHeader>
             <SectionTitle>{t('home.categories')}</SectionTitle>
