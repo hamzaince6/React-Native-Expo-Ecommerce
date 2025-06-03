@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, Dimensions } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { Dimensions, ScrollView } from 'react-native';
 import styled from 'styled-components/native';
-import Animated, { 
-  useSharedValue, 
-  useAnimatedScrollHandler, 
-  useAnimatedStyle,
-  withTiming,
-  interpolate
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
 } from 'react-native-reanimated';
 import { BannerItem } from './data';
 
@@ -17,19 +14,22 @@ interface BannerProps {
 const Banner: React.FC<BannerProps> = ({ banners }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useSharedValue(0);
+  const scrollRef = useRef<ScrollView>(null);
   const { width } = Dimensions.get('window');
-  const actualWidth = width - 16; 
+  const actualWidth = width - 16;
 
-  // Auto scroll functionality
   useEffect(() => {
     const timer = setInterval(() => {
       const nextIndex = (currentIndex + 1) % banners.length;
       setCurrentIndex(nextIndex);
-      scrollX.value = withTiming(nextIndex * actualWidth);
-    }, 3000);
+      scrollRef.current?.scrollTo({
+        x: nextIndex * actualWidth,
+        animated: true,
+      });
+    }, 4000);
 
     return () => clearInterval(timer);
-  }, [currentIndex, banners.length, actualWidth, scrollX]);
+  }, [currentIndex, banners.length]);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -42,8 +42,9 @@ const Banner: React.FC<BannerProps> = ({ banners }) => {
   });
 
   return (
-    <BannerContainer>
-      <AnimatedScrollView
+    <Wrapper>
+      <Carousel
+        ref={scrollRef}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
@@ -51,97 +52,62 @@ const Banner: React.FC<BannerProps> = ({ banners }) => {
         scrollEventThrottle={16}
         decelerationRate="fast"
       >
-        {banners.map((banner, index) => (
-          <BannerSlide key={banner.id} width={actualWidth}>
-            <BannerImage
-              source={{ uri: banner.imageUrl }}
-              resizeMode="cover"
-            />
-            <BannerOverlay>
-              <BannerTitle>{banner.title}</BannerTitle>
-              <BannerSubtitle>{banner.subtitle}</BannerSubtitle>
-            </BannerOverlay>
-          </BannerSlide>
+        {banners.map((banner) => (
+          <Card key={banner.id} width={actualWidth}>
+            <ImageBackground source={{ uri: banner.imageUrl }}>
+              {/* 
+              <Overlay>
+                <Title numberOfLines={1}>{banner.title}</Title>
+                <Subtitle numberOfLines={2}>{banner.subtitle}</Subtitle>
+              </Overlay>
+              */}
+            </ImageBackground>
+          </Card>
         ))}
-      </AnimatedScrollView>
-      
-      <PaginationContainer>
-        {banners.map((_, index) => (
-          <PaginationDot key={index} active={index === currentIndex} />
-        ))}
-      </PaginationContainer>
-    </BannerContainer>
+      </Carousel>
+    </Wrapper>
   );
 };
 
-const BannerContainer = styled.View`
-  margin: ${({ theme }) => theme.spacing.sm}px;
-  border-radius: ${({ theme }) => theme.borderRadius.md}px;
+const Wrapper = styled.View`
+  margin: 8px;
   overflow: hidden;
-  margin-bottom: ${({ theme }) => theme.spacing.sm}px;
+  position: relative;
 `;
 
-const AnimatedScrollView = styled(Animated.ScrollView)`
+const Carousel = styled(Animated.ScrollView)`
   width: 100%;
 `;
 
-interface BannerSlideProps {
-  width: number;
-}
-
-const BannerSlide = styled.View<BannerSlideProps>`
+const Card = styled.View<{ width: number }>`
   width: ${({ width }) => width}px;
-  aspect-ratio: 2.5/1;
+  aspect-ratio: 2.5;
+  overflow: hidden;
+  margin-right: 8px;
 `;
 
-const BannerImage = styled.Image`
+const ImageBackground = styled.ImageBackground`
   width: 100%;
   height: 100%;
-  border-radius: ${({ theme }) => theme.borderRadius.md}px;
+  justify-content: flex-end;
 `;
 
-const BannerOverlay = styled.View`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: ${({ theme }) => theme.spacing.md}px;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-bottom-left-radius: ${({ theme }) => theme.borderRadius.md}px;
-  border-bottom-right-radius: ${({ theme }) => theme.borderRadius.md}px;
+const Overlay = styled.View`
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.45);
 `;
 
-const BannerTitle = styled.Text`
-  font-size: ${({ theme }) => theme.typography.fontSize.xl}px;
-  font-weight: bold;
+const Title = styled.Text`
   color: white;
+  font-size: 18px;
+  font-weight: 700;
 `;
 
-const BannerSubtitle = styled.Text`
-  font-size: ${({ theme }) => theme.typography.fontSize.md}px;
-  color: white;
+const Subtitle = styled.Text`
+  color: #e0e0e0;
+  font-size: 13px;
+  margin-top: 4px;
 `;
 
-const PaginationContainer = styled.View`
-  position: absolute;
-  bottom: 10px;
-  width: 100%;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
 
-interface PaginationDotProps {
-  active: boolean;
-}
-
-const PaginationDot = styled.View<PaginationDotProps>`
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  margin: 0 4px;
-  background-color: ${({ active, theme }) => 
-    active ? theme.colors.primary : 'rgba(255, 255, 255, 0.5)'};
-`;
-
-export default Banner; 
+export default Banner;
