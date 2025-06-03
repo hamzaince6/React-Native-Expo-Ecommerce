@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import styled from 'styled-components/native';
@@ -9,9 +9,11 @@ import { RootStackParamList } from '@/navigation/AppNavigator';
 import { useI18n } from '@/i18n/I18nProvider';
 import ProductCard from '@/components/product/ProductCard';
 import CategoryList from '@/components/category/CategoryList';
+import { Banner, bannerData } from '@/components/banner';
+import { HeaderGrid, headerGridData } from '@/components/header';
 import { mockProducts } from '@/utils/mockData';
 
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
 
 function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
@@ -21,19 +23,16 @@ function HomeScreen() {
     navigation.navigate('Product', { productId });
   };
 
+  const handleCategoryPress = (categoryId: string) => {
+    // Handle category navigation here
+    console.log(`Category pressed: ${categoryId}`);
+  };
+
   return (
     <Container>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <BannerContainer>
-          <BannerImage
-            source={{ uri: 'https://placehold.co/600x400' }}
-            resizeMode="cover"
-          />
-          <BannerOverlay>
-            <BannerTitle>Hamza Ecommerce</BannerTitle>
-            <BannerSubtitle>Premium Mobile Experience</BannerSubtitle>
-          </BannerOverlay>
-        </BannerContainer>
+        <HeaderGrid boxes={headerGridData} onBoxPress={handleCategoryPress} />
+        <Banner banners={bannerData} />
 
         <SectionContainer>
           <SectionHeader>
@@ -73,41 +72,6 @@ function HomeScreen() {
 const Container = styled.SafeAreaView`
   flex: 1;
   background-color: ${({ theme }) => theme.colors.background};
-`;
-
-const BannerContainer = styled.View`
-  height: 200px;
-  margin: 0 ${({ theme }) => theme.spacing.md}px;
-  border-radius: ${({ theme }) => theme.borderRadius.md}px;
-  overflow: hidden;
-  margin-bottom: ${({ theme }) => theme.spacing.md}px;
-`;
-
-const BannerImage = styled.Image`
-  width: 100%;
-  height: 100%;
-  margin-bottom: ${({ theme }) => theme.spacing.sm}px;
-  margin-top: ${({ theme }) => theme.spacing.sm}px;
-`;
-
-const BannerOverlay = styled.View`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: ${({ theme }) => theme.spacing.md}px;
-  background-color: rgba(0, 0, 0, 0.4);
-`;
-
-const BannerTitle = styled.Text`
-  font-size: ${({ theme }) => theme.typography.fontSize.xl}px;
-  font-weight: bold;
-  color: white;
-`;
-
-const BannerSubtitle = styled.Text`
-  font-size: ${({ theme }) => theme.typography.fontSize.md}px;
-  color: white;
 `;
 
 const SectionContainer = styled.View`
