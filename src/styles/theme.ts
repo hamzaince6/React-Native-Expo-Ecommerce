@@ -1,15 +1,15 @@
 export const theme = {
   colors: {
-    primary: '#3498db',
-    secondary: '#2ecc71',
-    background: '#ffffff',
-    text: '#333333',
-    textLight: '#999999',
-    error: '#e74c3c',
-    success: '#27ae60',
-    warning: '#f39c12',
-    border: '#e0e0e0',
-    card: '#f8f8f8',
+    primary: '#FF6000', 
+    secondary: '#F4B400', 
+    background: '#ffffff', 
+    text: '#1F2937', 
+    textLight: '#6B7280', 
+    error: '#DC2626', 
+    success: '#059669', 
+    warning: '#D97706', 
+    border: '#E5E7EB', 
+    card: '#FFFFFF', 
   },
   spacing: {
     xs: 4,
@@ -72,4 +72,4 @@ export const theme = {
       elevation: 8,
     },
   },
-}; 
+};
