@@ -7,6 +7,7 @@ import BottomTabNavigator from './BottomTabNavigator';
 export type RootStackParamList = {
   Main: undefined;
   Product: { productId: string };
+  Categories: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

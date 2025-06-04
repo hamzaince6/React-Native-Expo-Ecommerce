@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AdsBanner } from '@/components';
 
 type Category = {
   id: string;
@@ -54,6 +55,7 @@ const CategoriesScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <AdsBanner />
       <Text style={styles.title}>Categories</Text>
       <FlatList
         data={categories}

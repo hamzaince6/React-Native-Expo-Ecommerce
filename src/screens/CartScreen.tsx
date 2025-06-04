@@ -8,6 +8,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { RootStackParamList } from '@/navigation/AppNavigator';
 import { useI18n } from '@/i18n/I18nProvider';
 import { mockProducts, Product } from '@/utils/mockData';
+import { AdsBanner } from '@/components';
 
 type CartScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Cart'>;
 
@@ -63,6 +64,7 @@ function CartScreen() {
 
   return (
     <Container>
+      <AdsBanner />
       <FlatList
         data={cartItems}
         keyExtractor={item => item.product.id}

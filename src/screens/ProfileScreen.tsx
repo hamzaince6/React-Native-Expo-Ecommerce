@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { useI18n } from '@/i18n/I18nProvider';
+import { AdsBanner } from '@/components';
 
 // Mock user data
 const user = {
@@ -51,6 +52,7 @@ function ProfileScreen() {
 
   return (
     <Container>
+      <AdsBanner />
       <ScrollView showsVerticalScrollIndicator={false}>
         <ProfileHeader>
           <AvatarContainer>
