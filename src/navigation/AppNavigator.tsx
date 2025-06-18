@@ -2,12 +2,14 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import ProductScreen from '@/screens/ProductScreen';
+import AllProductsScreen from '@/screens/AllProductsScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 
 export type RootStackParamList = {
   Main: undefined;
   Product: { productId: string };
   Categories: undefined;
+  AllProducts: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -38,6 +40,10 @@ function AppNavigator() {
             fontWeight: 'bold',
           },
         })} 
+      />
+      <Stack.Screen
+        name="AllProducts"
+        component={AllProductsScreen}
       />
     </Stack.Navigator>
   );

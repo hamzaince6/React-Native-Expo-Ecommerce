@@ -9,6 +9,7 @@ export default {
     delete: 'Delete',
     back: 'Back',
     next: 'Next',
+    page: 'Page',
   },
   auth: {
     login: 'Login',
@@ -26,6 +27,7 @@ export default {
     viewAll: 'View All',
     search: 'Search products...',
     deals: 'Special Deals',
+    allProducts: 'All Products',
   },
   product: {
     addToCart: 'Add to Cart',

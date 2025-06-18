@@ -23,8 +23,8 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
 function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
-  const handleProductPress = (productId: string) => {
-    navigation.navigate('Product', { productId });
+  const handleProductPress = (productId: string | number) => {
+    navigation.navigate('Product', { productId: productId.toString() });
   };
 
   const handleCategoryPress = (categoryId: string) => {
@@ -37,8 +37,7 @@ function HomeScreen() {
   };
 
   const handleViewAllProducts = () => {
-    // Navigate to all products screen
-    console.log('View all products');
+    navigation.navigate('AllProducts');
   };
 
   const handleViewAllDeals = () => {
@@ -65,12 +64,10 @@ function HomeScreen() {
         {/* Deals Section */}
         <DealsSection 
           onProductPress={handleProductPress}
-          onViewAllPress={handleViewAllDeals}
         />
 
         {/* Featured Products */}
         <FeaturedProductsSection 
-          products={mockProducts} 
           onProductPress={handleProductPress}
           onViewAllPress={handleViewAllProducts}
         />

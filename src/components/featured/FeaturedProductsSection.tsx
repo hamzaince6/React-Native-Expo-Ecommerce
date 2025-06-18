@@ -1,25 +1,55 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { useI18n } from '@/i18n/I18nProvider';
 import ProductCard from '@/components/product/ProductCard';
-import { Product } from '@/utils/mockData';
 import { spacing, borderRadius, shadows, colors, globalStyles } from '@/styles/globalStyles';
+import { useFeaturedProducts } from '@/services/FeaturedProductsServices';
+import { Product as ApiProduct } from '@/services/SpecialDealsServices';
+import { Product as UIProduct } from '@/utils/mockData';
 
 interface FeaturedProductsSectionProps {
-  products: Product[];
   onViewAllPress?: () => void;
-  onProductPress: (productId: string) => void;
+  onProductPress: (productId: number) => void;
 }
 
 function FeaturedProductsSection({
-  products,
   onViewAllPress,
   onProductPress,
 }: FeaturedProductsSectionProps) {
   const { t } = useI18n();
+  const { products, isLoading, error } = useFeaturedProducts();
+
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <ActivityIndicator size="large" color={colors.primary[500]} />
+      </LoadingContainer>
+    );
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer>
+        <ErrorText>{error}</ErrorText>
+      </ErrorContainer>
+    );
+  }
+
+  // Map API products to UI products
+  const mappedProducts: UIProduct[] = products.map(product => ({
+    id: product.id.toString(),
+    name: product.title,
+    description: product.description,
+    price: product.price,
+    imageUrl: product.images[0],
+    rating: 4.5,
+    reviewCount: 10,
+    category: product.category?.name || 'Other',
+    inStock: true
+  }));
 
   return (
     <SectionContainer>
@@ -31,11 +61,11 @@ function FeaturedProductsSection({
         </ViewAllButton>
       </SectionHeader>
       <ProductGrid>
-        {products.map((product) => (
+        {mappedProducts.map((product) => (
           <ProductCardContainer key={product.id}>
             <ProductCard
               product={product}
-              onPress={() => onProductPress(product.id)}
+              onPress={() => onProductPress(parseInt(product.id))}
             />
           </ProductCardContainer>
         ))}
@@ -43,6 +73,23 @@ function FeaturedProductsSection({
     </SectionContainer>
   );
 }
+
+const LoadingContainer = styled.View`
+  padding: ${spacing.xl}px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ErrorContainer = styled.View`
+  padding: ${spacing.xl}px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ErrorText = styled.Text`
+  color: #DC2626;
+  font-size: 14px;
+`;
 
 const SectionContainer = styled.View`
   background-color: ${colors.background[50]};

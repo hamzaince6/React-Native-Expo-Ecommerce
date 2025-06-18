@@ -1,15 +1,15 @@
 import React from 'react';
-import { FlatList, TouchableOpacity } from 'react-native';
+import { FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { useI18n } from '@/i18n/I18nProvider';
-import { Product, mockProducts } from '@/utils/mockData';
 import { spacing, borderRadius, shadows, colors, globalStyles } from '@/styles/globalStyles';
+import { useSpecialDeals, Product as ApiProduct } from '@/services/SpecialDealsServices';
 
 interface DealsSectionProps {
   onViewAllPress?: () => void;
-  onProductPress?: (productId: string) => void;
+  onProductPress?: (productId: number) => void;
 }
 
 const DealsSection: React.FC<DealsSectionProps> = ({ 
@@ -17,48 +17,61 @@ const DealsSection: React.FC<DealsSectionProps> = ({
   onProductPress 
 }) => {
   const { t } = useI18n();
+  const { products, isLoading, error } = useSpecialDeals();
   
-  // Normalde API'den indirimli ürünleri alırdık, şimdilik mock veri kullanıyoruz
-  const deals = mockProducts.slice(0, 6);
-
-  const handleProductPress = (productId: string) => {
+  const handleProductPress = (productId: number) => {
     if (onProductPress) {
       onProductPress(productId);
     }
   };
 
-  const renderDealItem = ({ item }: { item: Product }) => (
+  const renderDealItem = ({ item }: { item: ApiProduct }) => (
     <DealItem onPress={() => handleProductPress(item.id)}>
       <DealImageContainer>
-        <DealImage source={{ uri: item.imageUrl }} resizeMode="cover" />
+        <DealImage 
+          source={{ uri: item.images[0] }} 
+          resizeMode="cover" 
+        />
         <DiscountBadge>
           <DiscountText>-{Math.floor(Math.random() * 40 + 10)}%</DiscountText>
         </DiscountBadge>
       </DealImageContainer>
       <DealInfo>
-        <DealName numberOfLines={2}>{item.name}</DealName>
+        <DealName numberOfLines={2}>{item.title}</DealName>
         <PriceContainer>
           <CurrentPrice>${item.price.toFixed(2)}</CurrentPrice>
-          <OriginalPrice>${(item.price * (1 + Math.random() * 0.5)).toFixed(2)}</OriginalPrice>
+          <OriginalPrice>${(item.price * 1.3).toFixed(2)}</OriginalPrice>
         </PriceContainer>
       </DealInfo>
     </DealItem>
   );
 
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <ActivityIndicator size="large" color={colors.primary[500]} />
+      </LoadingContainer>
+    );
+  }
+
+  if (error) {
+    return (
+      <ErrorContainer>
+        <ErrorText>{error}</ErrorText>
+      </ErrorContainer>
+    );
+  }
+
   return (
     <Container>
       <SectionHeader>
         <SectionTitle>{t('home.deals')}</SectionTitle>
-        <ViewAllButton onPress={onViewAllPress}>
-          <ViewAllText>{t('home.viewAll')}</ViewAllText>
-          <MaterialIcons name="chevron-right" size={18} color={colors.secondary[500]} />
-        </ViewAllButton>
       </SectionHeader>
 
       <FlatList
-        data={deals}
+        data={products}
         renderItem={renderDealItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: spacing.md }}
@@ -67,6 +80,23 @@ const DealsSection: React.FC<DealsSectionProps> = ({
     </Container>
   );
 };
+
+const LoadingContainer = styled.View`
+  padding: ${spacing.xl}px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ErrorContainer = styled.View`
+  padding: ${spacing.xl}px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ErrorText = styled.Text`
+  color: #DC2626;
+  font-size: 14px;
+`;
 
 const Container = styled.View`
   background-color: ${colors.background[50]};
