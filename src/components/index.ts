@@ -1,5 +1,4 @@
 // Category components
-export { default as CategoryList } from './category/CategoryList';
 export { default as CategoriesSection } from './category/CategoriesSection';
 
 // Featured components
