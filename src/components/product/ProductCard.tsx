@@ -4,6 +4,8 @@ import styled from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { Product } from '@/utils/mockData';
+import { spacing, borderRadius, shadows, colors } from '@/styles/globalStyles';
+import { useI18n } from '@/i18n/I18nProvider';
 
 interface ProductCardProps {
   product: Product;
@@ -12,6 +14,7 @@ interface ProductCardProps {
 
 function ProductCard({ product, onPress }: ProductCardProps) {
   const { name, price, discountPrice, imageUrl, rating, inStock } = product;
+  const { t } = useI18n();
 
   return (
     <CardContainer onPress={onPress}>
@@ -19,14 +22,14 @@ function ProductCard({ product, onPress }: ProductCardProps) {
         <ProductImage source={{ uri: imageUrl }} resizeMode="cover" />
         {!inStock && (
           <OutOfStockBadge>
-            <OutOfStockText>Out of Stock</OutOfStockText>
+            <OutOfStockText>{t('product.outOfStock')}</OutOfStockText>
           </OutOfStockBadge>
         )}
       </ImageContainer>
       <ContentContainer>
         <ProductName numberOfLines={2}>{name}</ProductName>
         <RatingContainer>
-          <MaterialIcons name="star" size={16} color="#f39c12" />
+          <MaterialIcons name="star" size={14} color={colors.secondary[500]} />
           <RatingText>{rating.toFixed(1)}</RatingText>
         </RatingContainer>
         <PriceContainer>
@@ -45,15 +48,21 @@ function ProductCard({ product, onPress }: ProductCardProps) {
 }
 
 const CardContainer = styled.TouchableOpacity`
-  background-color: ${({ theme }) => theme.colors.card};
-  border-radius: ${({ theme }) => theme.borderRadius.md}px;
+  background-color: ${colors.background[50]};
+  border-radius: ${borderRadius.lg}px;
   overflow: hidden;
-  ${({ theme }) => theme.shadows.sm};
+  border-width: 1px;
+  border-color: ${colors.background[300]};
+  elevation: ${shadows.sm.elevation};
+  shadow-color: ${shadows.sm.shadowColor};
+  shadow-offset: ${shadows.sm.shadowOffset.width}px ${shadows.sm.shadowOffset.height}px;
+  shadow-opacity: ${shadows.sm.shadowOpacity};
+  shadow-radius: ${shadows.sm.shadowRadius}px;
 `;
 
 const ImageContainer = styled.View`
   position: relative;
-  height: 150px;
+  height: 140px;
 `;
 
 const ProductImage = styled.Image`
@@ -66,37 +75,38 @@ const OutOfStockBadge = styled.View`
   top: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.7);
-  padding: ${({ theme }) => `${theme.spacing.xs}px ${theme.spacing.sm}px`};
-  border-bottom-left-radius: ${({ theme }) => theme.borderRadius.sm}px;
+  padding: ${spacing.xs}px ${spacing.sm}px;
+  border-bottom-left-radius: ${borderRadius.sm}px;
 `;
 
 const OutOfStockText = styled.Text`
   color: white;
-  font-size: ${({ theme }) => theme.typography.fontSize.xs}px;
+  font-size: 10px;
   font-weight: bold;
 `;
 
 const ContentContainer = styled.View`
-  padding: ${({ theme }) => theme.spacing.sm}px;
+  padding: ${spacing.sm}px;
 `;
 
 const ProductName = styled.Text`
-  font-size: ${({ theme }) => theme.typography.fontSize.md}px;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.xs}px;
+  font-size: 14px;
+  font-weight: 600;
+  color: ${colors.text[600]};
+  margin-bottom: ${spacing.xs}px;
+  height: 40px;
 `;
 
 const RatingContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacing.xs}px;
+  margin-bottom: ${spacing.xs}px;
 `;
 
 const RatingText = styled.Text`
-  font-size: ${({ theme }) => theme.typography.fontSize.sm}px;
-  color: ${({ theme }) => theme.colors.textLight};
-  margin-left: ${({ theme }) => theme.spacing.xs}px;
+  font-size: 12px;
+  color: ${colors.textLight[500]};
+  margin-left: ${spacing.xs}px;
 `;
 
 const PriceContainer = styled.View`
@@ -105,21 +115,21 @@ const PriceContainer = styled.View`
 `;
 
 const Price = styled.Text`
-  font-size: ${({ theme }) => theme.typography.fontSize.md}px;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colors.text};
+  font-size: 16px;
+  font-weight: 700;
+  color: ${colors.text[600]};
 `;
 
 const DiscountPrice = styled.Text`
-  font-size: ${({ theme }) => theme.typography.fontSize.md}px;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colors.primary};
-  margin-right: ${({ theme }) => theme.spacing.xs}px;
+  font-size: 16px;
+  font-weight: 700;
+  color: ${colors.primary[500]};
+  margin-right: ${spacing.xs}px;
 `;
 
 const OriginalPrice = styled.Text`
-  font-size: ${({ theme }) => theme.typography.fontSize.sm}px;
-  color: ${({ theme }) => theme.colors.textLight};
+  font-size: 12px;
+  color: ${colors.textLight[500]};
   text-decoration-line: line-through;
 `;
 

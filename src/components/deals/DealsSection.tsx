@@ -2,10 +2,10 @@ import React from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { DefaultTheme } from 'styled-components/native';
 
 import { useI18n } from '@/i18n/I18nProvider';
 import { Product, mockProducts } from '@/utils/mockData';
+import { spacing, borderRadius, shadows, colors, globalStyles } from '@/styles/globalStyles';
 
 interface DealsSectionProps {
   onViewAllPress?: () => void;
@@ -48,10 +48,10 @@ const DealsSection: React.FC<DealsSectionProps> = ({
   return (
     <Container>
       <SectionHeader>
-        <SectionTitle>{t('home.deals') || 'Günün Fırsatları'}</SectionTitle>
+        <SectionTitle>{t('home.deals')}</SectionTitle>
         <ViewAllButton onPress={onViewAllPress}>
-          <ViewAllText>{t('home.viewAll') || 'Tümünü Gör'}</ViewAllText>
-          <MaterialIcons name="chevron-right" size={20} color="#3498db" />
+          <ViewAllText>{t('home.viewAll')}</ViewAllText>
+          <MaterialIcons name="chevron-right" size={18} color={colors.secondary[500]} />
         </ViewAllButton>
       </SectionHeader>
 
@@ -61,7 +61,7 @@ const DealsSection: React.FC<DealsSectionProps> = ({
         keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16 }}
+        contentContainerStyle={{ paddingHorizontal: spacing.md }}
         ItemSeparatorComponent={() => <Separator />}
       />
     </Container>
@@ -69,39 +69,48 @@ const DealsSection: React.FC<DealsSectionProps> = ({
 };
 
 const Container = styled.View`
-  margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.md}px;
+  background-color: ${colors.background[50]};
+  padding: ${spacing.lg}px;
+  border-radius: ${borderRadius.lg}px;
+  margin-bottom: ${spacing.lg}px;
 `;
 
 const SectionHeader = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding-horizontal: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.md}px;
-  margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.sm}px;
+  padding-bottom: ${spacing.md}px;
 `;
 
 const SectionTitle = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.typography.fontSize.lg}px;
-  font-weight: bold;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.text};
+  font-size: 16px;
+  font-weight: 700;
+  color: ${colors.text[600]};
+  letter-spacing: -0.2px;
 `;
 
 const ViewAllButton = styled(TouchableOpacity)`
   flex-direction: row;
   align-items: center;
+  padding: ${spacing.xs}px ${spacing.sm + 2}px;
+  border-radius: ${borderRadius.lg}px;
+  background-color: ${colors.primary[50]};
 `;
 
 const ViewAllText = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.typography.fontSize.sm}px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
-  margin-right: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xs}px;
+  font-size: 13px;
+  font-weight: 500;
+  color: ${colors.secondary[500]};
+  margin-right: ${spacing.xs}px;
 `;
 
 const DealItem = styled(TouchableOpacity)`
   width: 160px;
-  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.card};
-  border-radius: ${({ theme }: { theme: DefaultTheme }) => theme.borderRadius.md}px;
+  background-color: ${colors.background[50]};
+  border-radius: ${borderRadius.lg}px;
   overflow: hidden;
+  border-width: 1px;
+  border-color: ${colors.background[300]};
 `;
 
 const DealImageContainer = styled.View`
@@ -117,28 +126,28 @@ const DealImage = styled.Image`
 
 const DiscountBadge = styled.View`
   position: absolute;
-  top: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xs}px;
-  left: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xs}px;
-  background-color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.error};
-  padding-horizontal: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xs}px;
+  top: ${spacing.xs}px;
+  left: ${spacing.xs}px;
+  background-color: ${colors.primary[500]};
+  padding-horizontal: ${spacing.xs}px;
   padding-vertical: 2px;
-  border-radius: ${({ theme }: { theme: DefaultTheme }) => theme.borderRadius.sm}px;
+  border-radius: ${borderRadius.sm}px;
 `;
 
 const DiscountText = styled.Text`
   color: white;
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.typography.fontSize.xs}px;
+  font-size: 12px;
   font-weight: bold;
 `;
 
 const DealInfo = styled.View`
-  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.sm}px;
+  padding: ${spacing.sm}px;
 `;
 
 const DealName = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.typography.fontSize.sm}px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.text};
-  margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xs}px;
+  font-size: 14px;
+  color: ${colors.text[600]};
+  margin-bottom: ${spacing.xs}px;
   height: 40px;
 `;
 
@@ -148,20 +157,20 @@ const PriceContainer = styled.View`
 `;
 
 const CurrentPrice = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.typography.fontSize.md}px;
+  font-size: 16px;
   font-weight: bold;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
-  margin-right: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xs}px;
+  color: ${colors.primary[500]};
+  margin-right: ${spacing.xs}px;
 `;
 
 const OriginalPrice = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.typography.fontSize.xs}px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.textLight};
+  font-size: 12px;
+  color: ${colors.textLight[500]};
   text-decoration-line: line-through;
 `;
 
 const Separator = styled.View`
-  width: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.sm}px;
+  width: ${spacing.md}px;
 `;
 
 export default DealsSection; 

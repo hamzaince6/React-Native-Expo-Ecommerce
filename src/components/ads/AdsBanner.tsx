@@ -2,36 +2,38 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useI18n } from '../../i18n/I18nProvider';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 interface AdItem {
-  text: string;
+  textKey: string;
   gradient: [string, string];
   icon: keyof typeof MaterialIcons.glyphMap;
 }
 
-const adData: AdItem[] = [
-  {
-    text: 'Yaz indirimleri başladı! Tüm ürünlerde %50 indirim',
-    gradient: ['#FF6B6B', '#FFD93D'],
-    icon: 'local-offer',
-  },
-  {
-    text: '100 TL ve üzeri alışverişlerde ücretsiz kargo!',
-    gradient: ['#36D1DC', '#5B86E5'],
-    icon: 'local-shipping',
-  },
-  {
-    text: 'Yeni koleksiyon şimdi satışta!',
-    gradient: ['#667EEA', '#764BA2'],
-    icon: 'new-releases',
-  },
-];
-
 const AdsBanner = () => {
+  const { t } = useI18n();
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const adData: AdItem[] = [
+    {
+      textKey: 'ads.summerSale',
+      gradient: ['#FF6B6B', '#FFD93D'],
+      icon: 'local-offer',
+    },
+    {
+      textKey: 'ads.freeShipping',
+      gradient: ['#36D1DC', '#5B86E5'],
+      icon: 'local-shipping',
+    },
+    {
+      textKey: 'ads.newCollection',
+      gradient: ['#667EEA', '#764BA2'],
+      icon: 'new-releases',
+    },
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -71,7 +73,7 @@ const AdsBanner = () => {
         >
             <View style={styles.content}>
             <MaterialIcons name={item.icon} size={18} color="white" style={styles.icon} />
-            <Text style={styles.text}>{item.text}</Text>
+            <Text style={styles.text}>{t(item.textKey)}</Text>
             </View>
         </LinearGradient>
         ))}

@@ -2,11 +2,11 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { DefaultTheme } from 'styled-components/native';
 
 import { useI18n } from '@/i18n/I18nProvider';
 import ProductCard from '@/components/product/ProductCard';
 import { Product } from '@/utils/mockData';
+import { spacing, borderRadius, shadows, colors, globalStyles } from '@/styles/globalStyles';
 
 interface FeaturedProductsSectionProps {
   products: Product[];
@@ -27,7 +27,7 @@ function FeaturedProductsSection({
         <SectionTitle>{t('home.featured')}</SectionTitle>
         <ViewAllButton onPress={onViewAllPress}>
           <ViewAllText>{t('home.viewAll')}</ViewAllText>
-          <MaterialIcons name="chevron-right" size={20} color="#3498db" />
+          <MaterialIcons name="chevron-right" size={18} color={colors.secondary[500]} />
         </ViewAllButton>
       </SectionHeader>
       <ProductGrid>
@@ -45,43 +45,55 @@ function FeaturedProductsSection({
 }
 
 const SectionContainer = styled.View`
-  margin-bottom: 100px;
-  padding-horizontal: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.md}px;
+  background-color: ${colors.background[50]};
+  padding: ${spacing.lg}px;
+  border-radius: ${borderRadius.lg}px;
+  elevation: ${shadows.md.elevation};
+  shadow-color: ${shadows.md.shadowColor};
+  shadow-offset: ${shadows.md.shadowOffset.width}px ${shadows.md.shadowOffset.height}px;
+  shadow-opacity: ${shadows.md.shadowOpacity};
+  shadow-radius: ${shadows.md.shadowRadius}px;
+  margin-bottom: ${spacing.xl}px;
 `;
 
 const SectionHeader = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.sm}px;
+  padding-bottom: ${spacing.md}px;
 `;
 
 const SectionTitle = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.typography.fontSize.lg}px;
-  font-weight: bold;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.text};
+  font-size: 16px;
+  font-weight: 700;
+  color: ${colors.text[600]};
+  letter-spacing: -0.2px;
 `;
 
 const ViewAllButton = styled(TouchableOpacity)`
   flex-direction: row;
   align-items: center;
+  padding: ${spacing.xs}px ${spacing.sm + 2}px;
+  border-radius: ${borderRadius.lg}px;
+  background-color: ${colors.primary[50]};
 `;
 
 const ViewAllText = styled.Text`
-  font-size: ${({ theme }: { theme: DefaultTheme }) => theme.typography.fontSize.sm}px;
-  color: ${({ theme }: { theme: DefaultTheme }) => theme.colors.primary};
-  margin-right: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xs}px;
+  font-size: 13px;
+  font-weight: 500;
+  color: ${colors.secondary[500]};
+  margin-right: ${spacing.xs}px;
 `;
 
 const ProductGrid = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
-  margin: -${({ theme }: { theme: DefaultTheme }) => theme.spacing.xs}px;
+  margin: -${spacing.sm}px;
 `;
 
 const ProductCardContainer = styled.View`
   width: 50%;
-  padding: ${({ theme }: { theme: DefaultTheme }) => theme.spacing.xs}px;
+  padding: ${spacing.sm}px;
 `;
 
 export default FeaturedProductsSection; 

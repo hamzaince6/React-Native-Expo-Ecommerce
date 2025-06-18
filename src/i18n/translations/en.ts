@@ -25,6 +25,7 @@ export default {
     categories: 'Categories',
     viewAll: 'View All',
     search: 'Search products...',
+    deals: 'Special Deals',
   },
   product: {
     addToCart: 'Add to Cart',
@@ -52,5 +53,13 @@ export default {
     addresses: 'Addresses',
     settings: 'Settings',
     logout: 'Logout',
+  },
+  categories: {
+    title: 'Categories',
+  },
+  ads: {
+    summerSale: 'Summer sale has started! 50% off on all products',
+    freeShipping: 'Free shipping on orders over $100!',
+    newCollection: 'New collection now available!',
   },
 }; 

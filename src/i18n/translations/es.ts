@@ -53,4 +53,9 @@ export default {
     settings: 'Configuración',
     logout: 'Cerrar sesión',
   },
+  ads: {
+    summerSale: '¡Rebajas de verano! 50% de descuento en todos los productos',
+    freeShipping: '¡Envío gratis en pedidos superiores a 100€!',
+    newCollection: '¡Nueva colección ya disponible!',
+  },
 }; 
