@@ -55,6 +55,12 @@ export default {
     addresses: 'Direcciones',
     settings: 'Configuración',
     logout: 'Cerrar sesión',
+    friends: 'Amigos',
+    additional: 'Adicional',
+    coupons: 'Mis Cupones',
+    paymentMethods: 'Métodos de pago',
+    notifications: 'Notificaciones',
+    helpSupport: 'Ayuda y Soporte',
   },
   ads: {
     summerSale: '¡Rebajas de verano! 50% de descuento en todos los productos',

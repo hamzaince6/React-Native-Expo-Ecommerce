@@ -55,6 +55,12 @@ export default {
     addresses: 'Adresses',
     settings: 'Paramètres',
     logout: 'Déconnexion',
+    friends: 'Amis',
+    additional: 'Supplémentaire',
+    coupons: 'Mes Coupons',
+    paymentMethods: 'Moyens de paiement',
+    notifications: 'Notifications',
+    helpSupport: 'Aide & Support',
   },
   categories: {
     title: 'Catégories',
