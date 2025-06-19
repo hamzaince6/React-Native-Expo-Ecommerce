@@ -61,6 +61,9 @@ export default {
     paymentMethods: 'Métodos de pago',
     notifications: 'Notificaciones',
     helpSupport: 'Ayuda y Soporte',
+    userDetails: 'Detalles del usuario',
+    memberSince: 'Miembro desde',
+    lastUpdated: 'Última actualización',
   },
   ads: {
     summerSale: '¡Rebajas de verano! 50% de descuento en todos los productos',

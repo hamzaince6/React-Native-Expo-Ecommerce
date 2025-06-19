@@ -6,4 +6,14 @@ export {
   fetchFeaturedProducts, 
   usePaginatedProducts, 
   fetchPaginatedProducts 
-} from './FeaturedProductsServices'; 
+} from './FeaturedProductsServices';
+export {
+  useUserProfile,
+  fetchUserProfile,
+  User
+} from './ProfileScreenServices';
+export {
+  useUsers,
+  usePaginatedUsers,
+  fetchUsers
+} from './UserServices'; 

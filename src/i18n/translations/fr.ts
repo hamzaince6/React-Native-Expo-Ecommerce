@@ -61,6 +61,9 @@ export default {
     paymentMethods: 'Moyens de paiement',
     notifications: 'Notifications',
     helpSupport: 'Aide & Support',
+    userDetails: 'Détails de l\'utilisateur',
+    memberSince: 'Membre depuis',
+    lastUpdated: 'Dernière mise à jour',
   },
   categories: {
     title: 'Catégories',

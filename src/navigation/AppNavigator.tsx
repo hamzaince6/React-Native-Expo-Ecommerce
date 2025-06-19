@@ -3,6 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import ProductScreen from '@/screens/ProductScreen';
 import AllProductsScreen from '@/screens/AllProductsScreen';
+import UserDetailScreen from '@/screens/UserDetailScreen';
+import AllFriendsScreen from '@/screens/AllFriendsScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 
 export type RootStackParamList = {
@@ -10,6 +12,8 @@ export type RootStackParamList = {
   Product: { productId: string };
   Categories: undefined;
   AllProducts: undefined;
+  UserDetail: { userId: number };
+  AllFriends: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -44,6 +48,20 @@ function AppNavigator() {
       <Stack.Screen
         name="AllProducts"
         component={AllProductsScreen}
+      />
+      <Stack.Screen
+        name="UserDetail"
+        component={UserDetailScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="AllFriends"
+        component={AllFriendsScreen}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );

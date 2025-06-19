@@ -1,30 +1,29 @@
 import React from 'react';
-import { ScrollView, Alert, Image, FlatList, TouchableOpacity } from 'react-native';
-import styled from 'styled-components/native';
+import { ScrollView, Alert, Image, FlatList, TouchableOpacity, ActivityIndicator, View, Dimensions } from 'react-native';
+import styled, { useTheme } from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { DefaultTheme } from 'styled-components/native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import { useI18n } from '@/i18n/I18nProvider';
 import { AdsBanner } from '@/components';
+import { useUserProfile, useUsers } from '@/services';
+import { RootStackParamList } from '@/navigation/AppNavigator';
 
 // Define friend status type
 type FriendStatus = 'online' | 'offline';
 
-// Mock user data
-const user = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  avatar: 'https://via.placeholder.com/150',
+type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList>;
+
+// Random online/offline status generator for demonstration
+const getRandomStatus = (): FriendStatus => {
+  return Math.random() > 0.5 ? 'online' : 'offline';
 };
 
-// Mock friends data
-const friends = [
-  { id: '1', name: 'Emma Wilson', avatar: 'https://randomuser.me/api/portraits/women/1.jpg', status: 'online' as FriendStatus },
-  { id: '2', name: 'Michael Brown', avatar: 'https://randomuser.me/api/portraits/men/2.jpg', status: 'offline' as FriendStatus },
-  { id: '3', name: 'Sophia Davis', avatar: 'https://randomuser.me/api/portraits/women/3.jpg', status: 'online' as FriendStatus },
-  { id: '4', name: 'James Miller', avatar: 'https://randomuser.me/api/portraits/men/4.jpg', status: 'offline' as FriendStatus },
-  { id: '5', name: 'Olivia Wilson', avatar: 'https://randomuser.me/api/portraits/women/5.jpg', status: 'online' as FriendStatus },
-];
+const ORANGE_COLOR = '#FF6000';
+const { width } = Dimensions.get('window');
+const ITEM_WIDTH = width / 5; // 5 items per row
 
 interface MenuItemProps {
   icon: string;
@@ -34,19 +33,20 @@ interface MenuItemProps {
 
 interface FriendItemProps {
   friend: {
-    id: string;
+    id: number;
     name: string;
     avatar: string;
     status: FriendStatus;
   };
-  onPress: (id: string) => void;
+  onPress: (id: number) => void;
 }
 
 function MenuItem({ icon, title, onPress }: MenuItemProps) {
+  const theme = useTheme() as DefaultTheme;
   return (
     <MenuItemContainer onPress={onPress}>
       <MenuItemIcon>
-        <MaterialIcons name={icon as any} size={24} color="#3498db" />
+        <MaterialIcons name={icon as any} size={24} color={ORANGE_COLOR} />
       </MenuItemIcon>
       <MenuItemTitle>{title}</MenuItemTitle>
       <MaterialIcons name="chevron-right" size={24} color="#999" />
@@ -61,13 +61,17 @@ function FriendItem({ friend, onPress }: FriendItemProps) {
         <FriendAvatar source={{ uri: friend.avatar }} />
         <StatusIndicator status={friend.status} />
       </FriendAvatarContainer>
-      <FriendName>{friend.name}</FriendName>
+      <FriendName numberOfLines={1} ellipsizeMode="tail">{friend.name}</FriendName>
     </FriendItemContainer>
   );
 }
 
 function ProfileScreen() {
   const { t } = useI18n();
+  const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const { user, isLoading: profileLoading, error: profileError } = useUserProfile();
+  const { users, isLoading: friendsLoading, error: friendsError } = useUsers(20); // Fetch 20 friends for preview
+  const theme = useTheme() as DefaultTheme;
 
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to logout?', [
@@ -85,20 +89,53 @@ function ProfileScreen() {
     ]);
   };
 
-  const handleFriendPress = (friendId: string) => {
-    const friend = friends.find(f => f.id === friendId);
-    Alert.alert('Friend', `You selected ${friend?.name}`);
+  const handleFriendPress = (friendId: number) => {
+    navigation.navigate('UserDetail', { userId: friendId });
   };
 
   const handleViewAllFriends = () => {
-    Alert.alert('Friends', 'View all your friends');
+    navigation.navigate('AllFriends');
   };
+
+  const handleViewUserDetails = () => {
+    if (user) {
+      navigation.navigate('UserDetail', { userId: user.id });
+    }
+  };
+
+  // Add random online/offline status to users
+  const friendsWithStatus = users.map(user => ({
+    ...user,
+    status: getRandomStatus()
+  }));
+
+  if (profileLoading) {
+    return (
+      <Container>
+        <AdsBanner />
+        <LoadingContainer>
+          <ActivityIndicator size="large" color={ORANGE_COLOR} />
+        </LoadingContainer>
+      </Container>
+    );
+  }
+
+  if (profileError || !user) {
+    return (
+      <Container>
+        <AdsBanner />
+        <ErrorContainer>
+          <ErrorText>{profileError || 'Failed to load user profile'}</ErrorText>
+        </ErrorContainer>
+      </Container>
+    );
+  }
 
   return (
     <Container>
       <AdsBanner />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <ProfileHeader>
+        <ProfileHeader onPress={handleViewUserDetails}>
           <AvatarContainer>
             <Avatar source={{ uri: user.avatar }} />
           </AvatarContainer>
@@ -106,6 +143,7 @@ function ProfileScreen() {
             <ProfileName>{user.name}</ProfileName>
             <ProfileEmail>{user.email}</ProfileEmail>
           </ProfileInfo>
+          <MaterialIcons name="chevron-right" size={24} color={ORANGE_COLOR} />
         </ProfileHeader>
 
         <SectionTitle>{t('profile.title')}</SectionTitle>
@@ -172,15 +210,26 @@ function ProfileScreen() {
         </SectionHeader>
 
         <FriendsContainer>
-          <FlatList
-            data={friends}
-            renderItem={({ item }) => <FriendItem friend={item} onPress={handleFriendPress} />}
-            keyExtractor={item => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 16 }}
-            ItemSeparatorComponent={() => <FriendSeparator />}
-          />
+          {friendsLoading ? (
+            <ActivityIndicator size="small" color={ORANGE_COLOR} style={{ padding: 20 }} />
+          ) : friendsError ? (
+            <ErrorText style={{ padding: 20, textAlign: 'center' }}>{friendsError}</ErrorText>
+          ) : (
+            <FlatList
+              data={friendsWithStatus}
+              renderItem={({ item }) => <FriendItem friend={item} onPress={handleFriendPress} />}
+              keyExtractor={item => item.id.toString()}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 16 }}
+              ItemSeparatorComponent={() => <FriendSeparator />}
+              ListEmptyComponent={() => (
+                <View style={{ padding: 20, alignItems: 'center' }}>
+                  <ErrorText>No friends found</ErrorText>
+                </View>
+              )}
+            />
+          )}
         </FriendsContainer>
 
         <LogoutButton onPress={handleLogout}>
@@ -197,7 +246,7 @@ const Container = styled.SafeAreaView<{ theme?: DefaultTheme }>`
   background-color: ${({ theme }) => theme?.colors.background};
 `;
 
-const ProfileHeader = styled.View<{ theme?: DefaultTheme }>`
+const ProfileHeader = styled.TouchableOpacity<{ theme?: DefaultTheme }>`
   flex-direction: row;
   align-items: center;
   padding: ${({ theme }) => theme?.spacing.lg}px;
@@ -293,7 +342,7 @@ const ViewAllButton = styled.TouchableOpacity<{ theme?: DefaultTheme }>`
 `;
 
 const ViewAllText = styled.Text<{ theme?: DefaultTheme }>`
-  color: ${({ theme }) => theme?.colors.primary[500]};
+  color: ${ORANGE_COLOR};
   font-size: ${({ theme }) => theme?.typography.fontSize.sm}px;
   font-weight: 500;
 `;
@@ -304,7 +353,7 @@ const FriendsContainer = styled.View<{ theme?: DefaultTheme }>`
 
 const FriendItemContainer = styled.TouchableOpacity<{ theme?: DefaultTheme }>`
   align-items: center;
-  width: 80px;
+  width: ${ITEM_WIDTH}px;
 `;
 
 const FriendAvatarContainer = styled.View`
@@ -312,18 +361,18 @@ const FriendAvatarContainer = styled.View`
 `;
 
 const FriendAvatar = styled.Image`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
 `;
 
 const StatusIndicator = styled.View<{ status: FriendStatus; theme?: DefaultTheme }>`
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 14px;
-  height: 14px;
-  border-radius: 7px;
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
   background-color: ${({ status }) => status === 'online' ? '#4CAF50' : '#9E9E9E'};
   border: 2px solid white;
 `;
@@ -333,10 +382,30 @@ const FriendName = styled.Text<{ theme?: DefaultTheme }>`
   color: ${({ theme }) => theme?.colors.text};
   margin-top: ${({ theme }) => theme?.spacing.xs}px;
   text-align: center;
+  width: 100%;
 `;
 
 const FriendSeparator = styled.View<{ theme?: DefaultTheme }>`
-  width: ${({ theme }) => theme?.spacing.md}px;
+  width: ${({ theme }) => theme?.spacing.xs}px;
+`;
+
+const LoadingContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ErrorContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+`;
+
+const ErrorText = styled.Text`
+  color: #DC2626;
+  font-size: 16px;
+  text-align: center;
 `;
 
 export default ProfileScreen; 
