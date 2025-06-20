@@ -2,8 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, GestureResponderEvent } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from 'styled-components/native';
-import { theme as themeType } from '@/styles/theme';
+import { theme } from '@/styles/theme';
 
 import HomeScreen from '@/screens/HomeScreen';
 import SearchScreen from '@/screens/SearchScreen';
@@ -22,8 +21,6 @@ type BottomTabParamList = {
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const CartButton = ({ onPress }: { onPress?: (e: GestureResponderEvent) => void }) => {
-  const theme = useTheme() as typeof themeType;
-  
   return (
     <TouchableOpacity
       style={styles.cartButton}
@@ -38,8 +35,6 @@ const CartButton = ({ onPress }: { onPress?: (e: GestureResponderEvent) => void 
 };
 
 const BottomTabNavigator = () => {
-  const theme = useTheme() as typeof themeType;
-
   return (
     <Tab.Navigator
       screenOptions={{

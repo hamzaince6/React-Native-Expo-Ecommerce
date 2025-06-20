@@ -4,7 +4,7 @@ import styled, { useTheme } from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { DefaultTheme } from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { useI18n } from '@/i18n/I18nProvider';
 import { AdsBanner } from '@/components';
@@ -14,7 +14,7 @@ import { RootStackParamList } from '@/navigation/AppNavigator';
 // Define friend status type
 type FriendStatus = 'online' | 'offline';
 
-type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList>;
+type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 // Random online/offline status generator for demonstration
 const getRandomStatus = (): FriendStatus => {
@@ -90,7 +90,7 @@ function ProfileScreen() {
   };
 
   const handleFriendPress = (friendId: number) => {
-    navigation.navigate('UserDetail', { userId: friendId });
+    navigation.navigate('UserDetail', { userId: String(friendId) });
   };
 
   const handleViewAllFriends = () => {
@@ -99,8 +99,12 @@ function ProfileScreen() {
 
   const handleViewUserDetails = () => {
     if (user) {
-      navigation.navigate('UserDetail', { userId: user.id });
+      navigation.navigate('UserDetail', { userId: String(user.id) });
     }
+  };
+
+  const handleViewOrders = () => {
+    navigation.navigate('OrdersScreen');
   };
 
   // Add random online/offline status to users
@@ -152,7 +156,7 @@ function ProfileScreen() {
           <MenuItem 
             icon="shopping-bag" 
             title={t('profile.orders')} 
-            onPress={() => Alert.alert('Orders', 'View your orders')} 
+            onPress={handleViewOrders} 
           />
           <Divider />
           <MenuItem 

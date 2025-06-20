@@ -1,3 +1,5 @@
+import { Order } from '../types/order';
+
 export interface Product {
   id: string;
   name: string;
@@ -120,4 +122,82 @@ export const mockCategories: Category[] = [
     name: 'Containers',
     imageUrl: 'https://placehold.co/100',
   },
+];
+
+export const mockOrders: Order[] = [
+  {
+    id: '1',
+    orderNumber: 'ORD-2023-001',
+    date: '2023-10-15',
+    status: 'delivered',
+    totalAmount: 1250.99,
+    items: [
+      {
+        id: '1',
+        productId: '101',
+        name: 'Akıllı Telefon X Pro',
+        price: 899.99,
+        quantity: 1,
+        imageUrl: 'https://via.placeholder.com/100',
+      },
+      {
+        id: '2',
+        productId: '102',
+        name: 'Kablosuz Kulaklık',
+        price: 129.99,
+        quantity: 2,
+        imageUrl: 'https://via.placeholder.com/100',
+      },
+      {
+        id: '3',
+        productId: '103',
+        name: 'Telefon Kılıfı',
+        price: 29.99,
+        quantity: 1,
+        imageUrl: 'https://via.placeholder.com/100',
+      }
+    ]
+  },
+  {
+    id: '2',
+    orderNumber: 'ORD-2023-045',
+    date: '2023-11-22',
+    status: 'shipped',
+    totalAmount: 459.98,
+    items: [
+      {
+        id: '4',
+        productId: '201',
+        name: 'Akıllı Saat',
+        price: 299.99,
+        quantity: 1,
+        imageUrl: 'https://via.placeholder.com/100',
+      },
+      {
+        id: '5',
+        productId: '202',
+        name: 'Şarj Kablosu',
+        price: 19.99,
+        quantity: 2,
+        imageUrl: 'https://via.placeholder.com/100',
+      }
+    ]
+  },
+  {
+    id: '3',
+    orderNumber: 'ORD-2023-078',
+    date: '2023-12-05',
+    status: 'processing',
+    totalAmount: 1899.99,
+    items: [
+      {
+        id: '6',
+        productId: '301',
+        name: 'Dizüstü Bilgisayar',
+        price: 1899.99,
+        quantity: 1,
+        imageUrl: 'https://via.placeholder.com/100',
+      }
+    ]
+  }
 ]; 

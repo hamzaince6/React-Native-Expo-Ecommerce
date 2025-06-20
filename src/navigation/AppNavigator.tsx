@@ -1,70 +1,43 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import ProductScreen from '@/screens/ProductScreen';
-import AllProductsScreen from '@/screens/AllProductsScreen';
-import UserDetailScreen from '@/screens/UserDetailScreen';
-import AllFriendsScreen from '@/screens/AllFriendsScreen';
 import BottomTabNavigator from './BottomTabNavigator';
+import ProductScreen from '@/screens/ProductScreen';
+import UserDetailScreen from '@/screens/UserDetailScreen';
+import AllProductsScreen from '@/screens/AllProductsScreen';
+import AllFriendsScreen from '@/screens/AllFriendsScreen';
+import OrderDetailScreen from '@/screens/OrderDetailScreen';
+import OrdersScreen from '@/screens/OrdersScreen';
+import { Order } from '@/types/order';
 
 export type RootStackParamList = {
   Main: undefined;
   Product: { productId: string };
-  Categories: undefined;
+  UserDetail: { userId: string };
   AllProducts: undefined;
-  UserDetail: { userId: number };
   AllFriends: undefined;
+  OrderDetail: { orderId: string };
+  OrdersScreen: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function AppNavigator() {
+const AppNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Main"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen 
-        name="Main" 
-        component={BottomTabNavigator} 
-      />
-      <Stack.Screen 
-        name="Product" 
-        component={ProductScreen} 
-        options={({ route }) => ({ 
-          headerShown: true,
-          title: `Product ${route.params.productId}`,
-          headerStyle: {
-            backgroundColor: '#3498db',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        })} 
-      />
-      <Stack.Screen
-        name="AllProducts"
-        component={AllProductsScreen}
-      />
-      <Stack.Screen
-        name="UserDetail"
-        component={UserDetailScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="AllFriends"
-        component={AllFriendsScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Stack.Screen name="Main" component={BottomTabNavigator} />
+      <Stack.Screen name="Product" component={ProductScreen} />
+      <Stack.Screen name="UserDetail" component={UserDetailScreen} />
+      <Stack.Screen name="AllProducts" component={AllProductsScreen} />
+      <Stack.Screen name="AllFriends" component={AllFriendsScreen} />
+      <Stack.Screen name="OrderDetail" component={OrderDetailScreen} />
+      <Stack.Screen name="OrdersScreen" component={OrdersScreen} />
     </Stack.Navigator>
   );
-}
+};
 
 export default AppNavigator; 
